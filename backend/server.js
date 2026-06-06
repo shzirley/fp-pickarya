@@ -10,17 +10,9 @@ const adminRoutes = require('./routes/admin');
 
 const app = express();
 
-const allowedOrigins = process.env.ALLOWED_ORIGIN
-  ? process.env.ALLOWED_ORIGIN.split(',').map(o => o.trim())
-  : ['http://localhost:5173', 'http://localhost:3000'];
-
+// Allow all origins (safe for demo/presentation)
 app.use(cors({
-  origin: (origin, callback) => {
-    // Allow requests with no origin (mobile apps, Postman, etc.)
-    if (!origin) return callback(null, true);
-    if (allowedOrigins.includes(origin)) return callback(null, true);
-    return callback(new Error(`CORS: Origin ${origin} tidak diizinkan`));
-  },
+  origin: true,
   credentials: true,
 }));
 app.use(express.json({ limit: '50mb' }))        // ✅ dipindah ke sini

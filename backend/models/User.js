@@ -8,7 +8,7 @@ const userSchema = new mongoose.Schema({
       return !this.googleId;
     },
   },
-  googleId: { type: String, unique: true, sparse: true, default: null },
+  googleId: { type: String, unique: true, sparse: true },
   username: { type: String, required: true, unique: true },
   role: { type: String, enum: ['buyer', 'artist'], required: true },
   artistLevel: { type: String, default: null },

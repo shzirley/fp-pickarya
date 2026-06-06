@@ -143,7 +143,7 @@ router.post('/register', async (req, res) => {
     const user = await User.create({
       email: email.toLowerCase(),
       password: hashedPassword,
-      googleId: googleId || null,
+      googleId: googleId || undefined,
       username: username.toLowerCase(),
       role,
       artistLevel: artistLevel || null,

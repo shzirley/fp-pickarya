@@ -20,7 +20,7 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 // ✅ Handle preflight OPTIONS secara eksplisit (wajib untuk Vercel serverless)
-app.options('*', cors(corsOptions));
+// Removed app.options because Express 5 crashes on wildcards and fallback middleware handles it.
 
 // ✅ Fallback manual CORS headers (jaga-jaga kalau cors middleware tidak jalan)
 app.use((req, res, next) => {

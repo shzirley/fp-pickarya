@@ -59,10 +59,15 @@ function SignupAccountPage({ setCurrentPage, signupData, setSignupData, onLoginS
       return;
     }
 
-    const emailExists = await checkEmailExists(email);
+    try {
+      const emailExists = await checkEmailExists(email);
 
-    if (emailExists) {
-      setErrors((prev) => ({ ...prev, email: "Email sudah terdaftar/digunakan" }));
+      if (emailExists) {
+        setErrors((prev) => ({ ...prev, email: "Email sudah terdaftar/digunakan" }));
+        return;
+      }
+    } catch (err) {
+      setErrors((prev) => ({ ...prev, email: "Gagal menyambung ke server: " + err.message }));
       return;
     }
 

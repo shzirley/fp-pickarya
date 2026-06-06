@@ -10,13 +10,32 @@ const adminRoutes = require('./routes/admin');
 
 const app = express();
 
-// Allow all origins (safe for demo/presentation)
-app.use(cors({
-  origin: true,
+// ✅ CORS fix untuk Vercel serverless — harus sebelum semua route
+const corsOptions = {
+  origin: true, // izinkan semua origin (demo/presentation)
   credentials: true,
-}));
-app.use(express.json({ limit: '50mb' }))        // ✅ dipindah ke sini
-app.use(express.urlencoded({ limit: '50mb', extended: true }))  // ✅ dipindah ke sini
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+};
+
+app.use(cors(corsOptions));
+// ✅ Handle preflight OPTIONS secara eksplisit (wajib untuk Vercel serverless)
+app.options('*', cors(corsOptions));
+
+// ✅ Fallback manual CORS headers (jaga-jaga kalau cors middleware tidak jalan)
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', req.headers.origin || '*');
+  res.header('Access-Control-Allow-Credentials', 'true');
+  res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,PATCH,DELETE,OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
+  if (req.method === 'OPTIONS') {
+    return res.sendStatus(200);
+  }
+  next();
+});
+
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
 const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/pickarya';
 

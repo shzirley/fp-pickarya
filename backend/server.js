@@ -42,6 +42,13 @@ app.use('/api/artists', artistRoutes);
 app.use('/api/admin', adminRoutes);    
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`🚀 Server running di http://localhost:${PORT}`);
-});
+
+// Export for Vercel serverless
+module.exports = app;
+
+// Local dev
+if (require.main === module) {
+  app.listen(PORT, () => {
+    console.log(`🚀 Server running di http://localhost:${PORT}`);
+  });
+}
